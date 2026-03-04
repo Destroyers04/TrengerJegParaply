@@ -19,6 +19,9 @@
     dette prosjektet."
   - Bestemte meg for å bare vise paraplyvarselet basert på vindforholdene ved reisens start, noe jeg mener er
     godt nok siden det hjelper brukerne å avgjøre om de trenger paraply før de setter seg på bussen.
+    
+- User-Agent header trigget CORS preflight 
+ - MET Norway sitt API støtter ikke CORS preflights som blir trigget av custom headers som `User-Agent`. Dette førte til en 403 feil. Men i deres TOS står det at apper med lavt volum kan bruke enkle cross-origin requests, og at nettleseren automatisk setter `Origin` headeren for identifikasjon. Å fjerne den custom `User-Agent` headeren løste problemet, siden nettleseren håndterer identifikasjon automatisk.
 
 ### Tanker
 
