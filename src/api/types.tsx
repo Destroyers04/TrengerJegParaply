@@ -43,6 +43,8 @@ export interface Coordinates {
 }
 
 export interface GeocoderSearchParams {
-  user_input: string;
-  layers: string;
+  user_input_address: string;
+  size: number;
 }
+
+export interface Geocoder
