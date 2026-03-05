@@ -51,15 +51,13 @@ export interface GeocoderData {
 }
 
 export interface GeocoderFeature {
-  id: {
-    geometry: {
-      // Den første verdien er longtitude mens den andre er langtitude
-      coordinates: [number, number];
-    };
-    properties: {
-      stop_id: string;
-      label: string;
-      category?: string[];
-    };
+  geometry: {
+    // Den første verdien er longtitude mens den andre er langtitude
+    coordinates: [number, number];
+  };
+  properties: {
+    stop_id: string;
+    label: string;
+    category?: string[];
   };
 }

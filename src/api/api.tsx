@@ -1,17 +1,48 @@
-import type { WeatherData, Coordinates } from "@/api/types";
+import type {
+  WeatherData,
+  Coordinates,
+  GeocoderSearchParams,
+  GeocoderData,
+  GeocoderFeature,
+} from "@/api/types";
 
-// Link to Yr.no Nowcast api docs https://api.met.no/weatherapi/nowcast/2.0/documentation#!/data/get_complete
-// Example url:
+// Lenke til Yr.no Nowcast api-dokumentasjon https://api.met.no/weatherapi/nowcast/2.0/documentation#!/data/get_complete
+// Eksempel-URL:
 // https://api.met.no/weatherapi/nowcast/2.0/complete?lat=62.8347&lon=8.1222
 const nowcast_api_url = "https://api.met.no/weatherapi/nowcast/2.0/complete";
 
-// Lat and Lon should have max 4 decimals
-export const get_weather_measurements = async ({lat, lon}:Coordinates):Promise<WeatherData>=> {
-    // My custom header is 
-    const response = await fetch(`${nowcast_api_url}?lat=${lat}&lon=${lon}`) 
-    return await response.json()
+// Lat og Lon skal ha maks 4 desimaler
+export const get_weather_measurements = async ({
+  lat,
+  lon,
+}: Coordinates): Promise<WeatherData> => {
+  // Jeg bruker ikke custom header fordi det utløser et CORS feil, skal gå fint så lenge appen er lavvolum
+  const response = await fetch(`${nowcast_api_url}?lat=${lat}&lon=${lon}`);
+  return await response.json();
 };
 
-// Link to Entur journeyplanner api https://developer.entur.org/pages-journeyplanner-journeyplanner
+// Link to Entur journeyplanner api  docs https://developer.entur.org/pages-journeyplanner-journeyplanner
 // Example url:
 // https://api.entur.io/journey-planner/v3/graphql
+
+// Link til Geocoder Api docs https://developer.entur.org/pages-geocoder-api
+// Example url:
+//https://api.entur.io/geocoder/v1/autocomplete?text=Eidsvåg, bergen
+const geocoder_api_url = "https://api.entur.io/geocoder/v1/autocomplete";
+
+export const get_bus_stop_data = async ({
+  user_input_address,
+}: GeocoderSearchParams): Promise<GeocoderData> => {
+  const response = await fetch(
+    `${geocoder_api_url}?text=${user_input_address}&size=20&lang=no&boundary.country=NOR`,
+  );
+
+  const data: GeocoderData = await response.json();
+  // Filtrere ut data som ikke er busstopper
+  const filteredFeatures = data.features.filter((item: GeocoderFeature) =>
+    item.properties.category?.includes("onstreetBus"),
+  );
+  // Returnere opp til 5 av resultatene
+  const slicedFeatures = filteredFeatures.slice(0, 5);
+  return { features: slicedFeatures };
+};
