@@ -47,4 +47,20 @@ export interface GeocoderSearchParams {
   size: number;
 }
 
-export interface Geocoder
+export interface GeocoderData {
+  features: GeocoderFeature[];
+}
+
+export interface GeocoderFeature {
+  id: {
+    geometry: {
+      // Den første verdien er longtitude mens den andre er langtitude
+      coordinates: [number, number];
+    };
+    properties: {
+      stop_id: string;
+      label: string;
+      category?: string[];
+    };
+  };
+}
