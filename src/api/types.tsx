@@ -42,3 +42,7 @@ export interface Coordinates {
   lon: number;
 }
 
+export interface GeocoderSearchParams {
+  user_input: string;
+  layers: string;
+}
