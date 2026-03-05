@@ -58,6 +58,7 @@ export interface GeocoderFeature {
   properties: {
     stop_id: string;
     label: string;
+    county: string;
     category?: string[];
   };
 }
