@@ -61,3 +61,65 @@ export interface GeocoderFeature {
     category?: string[];
   };
 }
+
+export interface JourneyPlannerParam {
+  from: {
+    place?: string;
+    name: string;
+    coordinates: Coordinates;
+  };
+  to: {
+    place?: string;
+    name: string;
+    coordinates: Coordinates;
+  };
+  modes: {
+    accessMode: string;
+    egressMode: string;
+    transportModes: {
+      transportMode: string;
+    };
+  };
+  numTripPatterns: number;
+  dateTime: string;
+  walkSpeed: number;
+  arriveBy: boolean;
+}
+
+export interface JourneyPlannerData {
+  data: {
+    trip: {
+      tripPatterns: TripPattern[];
+    };
+  };
+}
+
+export interface TripPattern {
+  expectedStartTime: string;
+  expectedEndTime: string;
+  duration: number;
+  streetDistance: number;
+  legs: Leg[];
+}
+
+export interface Leg {
+  mode: string;
+  distance: number;
+  duration: number;
+  fromPlace: {
+    name: string;
+  };
+  toPlace: {
+    name: string;
+  };
+  line: {
+    publicCode: string;
+    name: string;
+  } | null;
+  fromEstimatedCall: {
+    quay: {
+      name: string;
+    };
+    expectedDepartureTime: string;
+  } | null;
+}
