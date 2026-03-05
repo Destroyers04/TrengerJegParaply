@@ -34,15 +34,7 @@ export const get_bus_stop_data = async ({
   user_input_address,
 }: GeocoderSearchParams): Promise<GeocoderData> => {
   const response = await fetch(
-    `${geocoder_api_url}?text=${user_input_address}&size=20&lang=no&boundary.country=NOR`,
+    `${geocoder_api_url}?text=${user_input_address}&size=5&lang=no&boundary.country=NOR`,
   );
-
-  const data: GeocoderData = await response.json();
-  // Filtrere ut data som ikke er busstopper
-  const filteredFeatures = data.features.filter((item: GeocoderFeature) =>
-    item.properties.category?.includes("onstreetBus"),
-  );
-  // Returnere opp til 5 av resultatene
-  const slicedFeatures = filteredFeatures.slice(0, 5);
-  return { features: slicedFeatures };
+  return await response.json();
 };
