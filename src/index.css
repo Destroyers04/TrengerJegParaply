@@ -116,6 +116,23 @@
     --radius-4xl: calc(var(--radius) + 16px);
 }
 
+@layer components {
+  .trip-card {
+    position: absolute;
+    left: 50%;
+    width: 100%;
+    max-width: 28rem;
+    translate: -50% -50%;
+    top: 50%;
+    transition: top 0.5s ease-in-out, translate 0.5s ease-in-out;
+  }
+
+  .trip-card[data-submitted="true"] {
+    translate: -50% 0%;
+    top: 2rem;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
