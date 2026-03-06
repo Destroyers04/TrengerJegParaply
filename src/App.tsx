@@ -1,23 +1,25 @@
-import {
-  get_bus_stop_data,
-  get_route_details_data,
-  get_weather_measurements_data,
-} from "@/api/api";
-import { useEffect } from "react";
+import { useState } from "react";
 import { TripForm } from "@/components/TripForm/trip-form";
-
+import { cn } from "@/lib/utils";
 function App() {
-/*   useEffect(() => {
-    get_weather_measurements_data({ lat: 62.5, lon: 8.111 }).then((data) =>
-      console.log(data),
-    );
-    get_bus_stop_data({
-      user_input_address: "rødstrandvegen 132, Molde",
-    }).then((data) => console.log(data));
-  }, []); */
+  const [status, setStatus] = useState<boolean>(false);
   return (
-    <div className="max-w-screen-xl mx-auto mt-8 flex justify-center">
-      <TripForm />
+    <div className="relative min-h-screen">
+      <div
+        className="trip-card border-solid border-4 p-8 rounded-md"
+        data-submitted={status}
+      >
+        <TripForm status={status} setStatus={setStatus} />
+      </div>
+      <div
+        className={cn(
+          status
+            ? "max-w-screen-xl flex justify-center items-center h-screen pt-8"
+            : "hidden",
+        )}
+      >
+        hidden object
+      </div>
     </div>
   );
 }
