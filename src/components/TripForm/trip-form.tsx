@@ -32,7 +32,6 @@ export function TripForm({ status, setStatus }: TripFormProps) {
   const [, formAction, isPending] = useActionState(submitInputData, null);
 
   const handleClick = async ({ from, to }: locationProps) => {
-    setStatus(true);
     const fromLocation = JSON.parse(from) as GeocoderFeature;
     const toLocation = JSON.parse(to) as GeocoderFeature;
 
@@ -56,6 +55,8 @@ export function TripForm({ status, setStatus }: TripFormProps) {
         dateTime: currentTime.toISOString(),
       }),
     ]);
+
+    setStatus(true);
   };
 
   async function submitInputData(_previousState: null, formData: FormData) {
