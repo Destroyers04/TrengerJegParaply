@@ -65,13 +65,9 @@ export interface GeocoderFeature {
 
 export interface JourneyPlannerParam {
   from: {
-    place?: string;
-    name: string;
     coordinates: Coordinates;
   };
   to: {
-    place?: string;
-    name: string;
     coordinates: Coordinates;
   };
   modes: {
