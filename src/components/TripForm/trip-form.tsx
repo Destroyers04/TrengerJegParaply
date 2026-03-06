@@ -9,8 +9,15 @@ import {
 } from "@/components/ui/field";
 import { InputField } from "@/components/TripForm/trip-form-input-field";
 import { useActionState, useState } from "react";
-import { get_weather_measurements_data } from "@/api/api";
-import type { GeocoderFeature, Coordinates } from "@/api/types";
+import {
+  get_route_details_data,
+  get_weather_measurements_data,
+} from "@/api/api";
+import type {
+  GeocoderFeature,
+  Coordinates,
+  JourneyPlannerParam,
+} from "@/api/types";
 
 interface locationProps {
   from: string;
@@ -21,36 +28,47 @@ export function TripForm() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
 
-  const [, formAction, isPending] = useActionState(submitInputData, 0);
+  const [, formAction, isPending] = useActionState(submitInputData, null);
 
   const handleClick = async ({ from, to }: locationProps) => {
-    const from_json = JSON.parse(from) as GeocoderFeature;
-    const to_json = JSON.parse(to) as GeocoderFeature;
+    const fromLocation = JSON.parse(from) as GeocoderFeature;
+    const toLocation = JSON.parse(to) as GeocoderFeature;
 
-    console.log(from_json, to_json);
-    const [weather_data_from, weather_data_to] = await Promise.all([
-      get_weather_measurements_data({
-        lat: from_json.geometry.coordinates[1],
-        lon: from_json.geometry.coordinates[0],
-      }),
-      get_weather_measurements_data({
-        lat: to_json.geometry.coordinates[1],
-        lon: to_json.geometry.coordinates[0],
+    const fromCords: Coordinates = {
+      lat: fromLocation.geometry.coordinates[1],
+      lon: fromLocation.geometry.coordinates[0],
+    };
+
+    const toCords: Coordinates = {
+      lat: toLocation.geometry.coordinates[1],
+      lon: toLocation.geometry.coordinates[0],
+    };
+    const currentTime: Date = new Date();
+
+    const [weatherFrom, weatherTo, route_details] = await Promise.all([
+      get_weather_measurements_data(fromCords),
+      get_weather_measurements_data(toCords),
+      get_route_details_data({
+        from: { coordinates: fromCords },
+        to: { coordinates: toCords },
+        dateTime: currentTime.toISOString(),
       }),
     ]);
-    console.log(weather_data_from);
-    console.log(weather_data_to);
+    console.log(weatherFrom);
+    console.log(weatherTo);
+    console.log(route_details);
   };
 
-  async function submitInputData(previousState, formData) {
+  async function submitInputData(_previousState: null, formData: FormData) {
     try {
-      const from = formData.get("from");
-      const to = formData.get("to");
+      const from = formData.get("from") as string;
+      const to = formData.get("to") as string;
       console.log(from, to);
       await handleClick({ from, to });
     } catch (error) {
-      return;
+      return null;
     }
+    return null;
   }
   return (
     <div className="w-full max-w-md border-solid border-4 p-8 rounded-md">
