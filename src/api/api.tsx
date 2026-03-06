@@ -3,9 +3,9 @@ import type {
   Coordinates,
   GeocoderSearchParams,
   GeocoderData,
-  GeocoderFeature,
+  JourneyPlannerData,
+  JourneyPlannerParam,
 } from "@/api/types";
-import { graphql, buildSchema } from "graphql";
 
 // Lenke til Yr.no Nowcast api-dokumentasjon https://api.met.no/weatherapi/nowcast/2.0/documentation#!/data/get_complete
 // Eksempel-URL:
@@ -32,10 +32,7 @@ const journeyplanner_api_base_url =
 export const get_route_details_data = async ({
   from,
   to,
-  numTripPatterns,
   dateTime,
-  walkSpeed,
-  arriveBy,
 }: JourneyPlannerParam): Promise<JourneyPlannerData> => {
   const response = await fetch(journeyplanner_api_base_url, {
     method: "POST",
@@ -46,12 +43,13 @@ export const get_route_details_data = async ({
     body: JSON.stringify({
       query: `{
         trip(
-          from: {name: "${from.name}", coordinates: {latitude: ${from.coordinates.lat}, longitude: ${from.coordinates.lon}}}
-          to: {name: "${to.name}", coordinates: {latitude: ${to.coordinates.lat}, longitude: ${to.coordinates.lon}}}
-          numTripPatterns: ${numTripPatterns}
+          from: { coordinates: {latitude: ${from.coordinates.lat}, longitude: ${from.coordinates.lon}}}
+          to: {coordinates: {latitude: ${to.coordinates.lat}, longitude: ${to.coordinates.lon}}}
+          modes: {accessMode: foot, egressMode: foot, transportModes: {transportMode: bus}}
+          numTripPatterns: 1
           dateTime: "${dateTime}"
-          walkSpeed: ${walkSpeed}
-          arriveBy: ${arriveBy}
+          walkSpeed: 1.3
+          arriveBy: false
         ) {
           tripPatterns {
             expectedStartTime
