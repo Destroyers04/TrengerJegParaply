@@ -17,11 +17,13 @@ import {
 import { useEffect, useState } from "react";
 
 interface InputFieldProps {
+  name: string;
+  required?: boolean;
   value: string;
   setValue: (value: string) => void;
 }
 
-export function InputField({ value, setValue }: InputFieldProps) {
+export function InputField({ name, required, value, setValue }: InputFieldProps) {
   const [suggestions, setSuggestions] = useState<GeocoderFeature[]>([]);
 
   const get_suggestions = async ({
@@ -47,7 +49,9 @@ export function InputField({ value, setValue }: InputFieldProps) {
 
   return (
     <Combobox
+      name={name}
       items={suggestions}
+      // itemToStringValue serializes the full object for form submission
       itemToStringValue={(suggestion: GeocoderFeature) =>
         JSON.stringify(suggestion)
       }
@@ -57,6 +61,7 @@ export function InputField({ value, setValue }: InputFieldProps) {
     >
       <ComboboxInput
         showTrigger={false}
+        required={required}
         placeholder="Søk ditt stopp"
         onChange={(e) => setValue(e.target.value)}
       />
