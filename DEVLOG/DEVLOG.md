@@ -82,3 +82,24 @@
 - Nedtrekkspilen i `ComboboxInput` tømte inputfeltet internt uten å oppdatere React-tilstanden, løste dette ved å skjule knappen med `showTrigger={false}`
 
 ---
+
+## Dag 3
+
+### Mål
+
+- Skrive ferdig Tripform component og logikk
+
+### Utfordringer & Løsninger
+
+- Base UI sin `itemToStringLabel` og `itemToStringValue` er to forskjellige props — den første styrer hva som vises i inputfeltet, den andre hva som sendes ved skjemainnsending. Brukte `itemToStringValue` til begge deler i begynnelsen, noe som førte til at inputfeltet viste hele objektet når brukeren trykker på valgt addresse.
+- `name`-propen på `ComboboxInput` (det synlige feltet) vs på `<Combobox>` (roten) gjør stor forskjell — bare roten oppretter et skjult input med den serialiserte verdien fra `itemToStringValue`.
+- `useActionState` gav typefeil fordi initial state (`0`) ikke matchet returtypen til action-funksjonen (`undefined`). Løste det ved å bruke `null` begge steder.
+- `const submitInputData` ble brukt i `useActionState` før den var definert — fikk `ReferenceError`. Byttet til `function`-deklarasjon som heises automatisk.
+
+### Tanker
+
+- For å sende et objekt gjennom et HTML-skjema må det serialiseres med `JSON.stringify` og parses tilbake med `JSON.parse` i submit-handleren. Føles litt som en workaround, men det er slik HTML-skjemaer fungerer, alt er strenger.
+- `formData.get()` returnerer `string | File | null`. TypeScript vet ikke at det alltid er en streng, så `as string` er nødvendig for å unngå typefeil uten å skrive unødvendig validering.
+- Skjemaer i React med `useActionState` er elegant når det fungerer, men krever at man er presis med typer og rekkefølge på deklarasjoner.
+
+---
