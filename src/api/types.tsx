@@ -70,17 +70,7 @@ export interface JourneyPlannerParam {
   to: {
     coordinates: Coordinates;
   };
-  modes: {
-    accessMode: string;
-    egressMode: string;
-    transportModes: {
-      transportMode: string;
-    };
-  };
-  numTripPatterns: number;
   dateTime: string;
-  walkSpeed: number;
-  arriveBy: boolean;
 }
 
 export interface JourneyPlannerData {
