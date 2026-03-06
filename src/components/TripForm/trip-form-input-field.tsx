@@ -1,5 +1,3 @@
-"use client";
-
 import { get_bus_stop_data } from "@/api/api";
 import type { GeocoderFeature, GeocoderSearchParams } from "@/api/types";
 import {
@@ -29,20 +27,17 @@ export function InputField({ value, setValue }: InputFieldProps) {
   const get_suggestions = async ({
     user_input_address,
   }: GeocoderSearchParams) => {
+    if (!value) {
+      return;
+    }
     const data = await get_bus_stop_data({
       user_input_address: user_input_address,
     });
     setSuggestions(data.features);
-    console.log("Get suggestions triggered");
   };
 
   useEffect(() => {
-    if (!value) {
-      // Tøm forslag når input er tomt
-      setSuggestions([]);
-      return;
-    }
-    // Vent 300ms etter siste tastetrykk før vi kaller API-et
+    // Vent 300ms etter siste tastetrykk før vi kaller API-et for å redusere unødvendig calls
     const timer = setTimeout(() => {
       get_suggestions({ user_input_address: value });
     }, 300);
@@ -53,8 +48,11 @@ export function InputField({ value, setValue }: InputFieldProps) {
   return (
     <Combobox
       items={suggestions}
-      itemToStringValue={({ properties: suggestion }: GeocoderFeature) =>
-        suggestion.label
+      itemToStringValue={(suggestion: GeocoderFeature) =>
+        JSON.stringify(suggestion)
+      }
+      itemToStringLabel={(suggestion: GeocoderFeature) =>
+        suggestion.properties.label
       }
     >
       <ComboboxInput
@@ -62,23 +60,30 @@ export function InputField({ value, setValue }: InputFieldProps) {
         placeholder="Søk ditt stopp"
         onChange={(e) => setValue(e.target.value)}
       />
-      <ComboboxContent>
-        <ComboboxEmpty>Ingen addresser funnet</ComboboxEmpty>
-        <ComboboxList className="max-h-1000">
-          {({ properties: suggestion }: GeocoderFeature) => (
-            <ComboboxItem key={suggestion.stop_id} value={suggestion.label}>
-              <Item size="xs" className="p-0">
-                <ItemContent>
-                  <ItemTitle className="whitespace-nowrap">
-                    {suggestion.label}
-                  </ItemTitle>
-                  <ItemDescription>{suggestion.county}</ItemDescription>
-                </ItemContent>
-              </Item>
-            </ComboboxItem>
-          )}
-        </ComboboxList>
-      </ComboboxContent>
+      {/* Display Combobox content only if there is a value in the input field */}
+      {value ? (
+        <ComboboxContent>
+          <ComboboxEmpty>Ingen addresser funnet</ComboboxEmpty>
+          <ComboboxList className="max-h-1000">
+            {(suggestion: GeocoderFeature) => (
+              <ComboboxItem key={suggestion.properties.id} value={suggestion}>
+                <Item size="xs" className="p-0">
+                  <ItemContent>
+                    <ItemTitle className="whitespace-nowrap">
+                      {suggestion.properties.label}
+                    </ItemTitle>
+                    <ItemDescription>
+                      {suggestion.properties.county}
+                    </ItemDescription>
+                  </ItemContent>
+                </Item>
+              </ComboboxItem>
+            )}
+          </ComboboxList>
+        </ComboboxContent>
+      ) : (
+        <></>
+      )}
     </Combobox>
   );
 }
