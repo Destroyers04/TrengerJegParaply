@@ -8,9 +8,9 @@ function App() {
   const [results, setResults] = useState<TripResults | null>(null);
 
   return (
-    <div className="relative min-h-screen">
+    <div>
       <div
-        className="trip-card border-solid border-4 p-8 rounded-md"
+        className="border-solid border-4 p-8 rounded-md max-w-screen-xl mx-auto md:mt-8  mt-3 md:w-[36rem] w-[24rem]"
         data-submitted={status}
       >
         <TripForm
