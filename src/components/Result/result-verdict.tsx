@@ -59,11 +59,35 @@ export function ResultVerdict({ results }: { results: TripResults | null }) {
   };
 
   return (
-    <div className="flex flex-col items-center gap-6">
-      <div className="flex gap-6 text-xl font-bold">
-        <p>{results.fromLabel}</p>
-        <p>{"\u2192"}</p>
-        <p>{results.toLabel}</p>
+    <div className="flex flex-col items-center gap-8">
+      <div className="flex flex-row gap-8 text-xl font-bold items-center">
+        <div className="flex flex-col items-center w-30 text-nowrap">
+          <p>{results.fromLabel}</p>
+          <p>
+            {new Date(
+              results.route_details.data.trip.tripPatterns[0].expectedStartTime,
+            ).toLocaleTimeString("no-NO", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            })}
+          </p>
+        </div>
+        <div className="flex flex-col items-center w-30">
+          <p>{"\u2192"}</p>
+        </div>
+        <div className="flex flex-col items-center w-30 text-nowrap">
+          <p>{results.toLabel}</p>
+          <p>
+            {new Date(
+              results.route_details.data.trip.tripPatterns[0].expectedEndTime,
+            ).toLocaleTimeString("no-NO", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            })}
+          </p>
+        </div>
       </div>
       <div>{verdict()}</div>
     </div>
