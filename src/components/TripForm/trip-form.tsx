@@ -29,6 +29,8 @@ export interface TripResults {
   weatherFrom: WeatherData;
   weatherTo: WeatherData;
   route_details: JourneyPlannerData;
+  fromLabel: string;
+  toLabel: string;
 }
 interface TripFormProps {
   status: boolean;
@@ -43,6 +45,7 @@ export function TripForm({ status, setStatus, setResults }: TripFormProps) {
   const [, formAction, isPending] = useActionState(submitInputData, null);
 
   const handleClick = async ({ from, to }: LocationProps) => {
+    setResults(null);
     const fromLocation = JSON.parse(from) as GeocoderFeature;
     const toLocation = JSON.parse(to) as GeocoderFeature;
     const fromCords: Coordinates = {
@@ -65,7 +68,13 @@ export function TripForm({ status, setStatus, setResults }: TripFormProps) {
         dateTime: currentTime.toISOString(),
       }),
     ]);
-    setResults({ weatherFrom, weatherTo, route_details });
+    setResults({
+      weatherFrom,
+      weatherTo,
+      route_details,
+      fromLabel: fromLocation.properties.label.split(",")[0],
+      toLabel: toLocation.properties.label.split(",")[0],
+    });
     setStatus(true);
   };
 

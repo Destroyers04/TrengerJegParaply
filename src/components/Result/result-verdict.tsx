@@ -58,5 +58,14 @@ export function ResultVerdict({ results }: { results: TripResults | null }) {
     return "Vi anbefaler ikke paraply, men vi anbefaler regnjakke!";
   };
 
-  return <div>{verdict()}</div>;
+  return (
+    <div className="flex flex-col items-center gap-6">
+      <div className="flex gap-6 text-xl font-bold">
+        <p>{results.fromLabel}</p>
+        <p>{"\u2192"}</p>
+        <p>{results.toLabel}</p>
+      </div>
+      <div>{verdict()}</div>
+    </div>
+  );
 }
