@@ -103,3 +103,31 @@
 - Skjemaer i React med `useActionState` er elegant når det fungerer, men krever at man er presis med typer og rekkefølge på deklarasjoner.
 
 ---
+
+## Dag 4
+
+### Mål
+
+- Skrive logikken for analysering av dataen fra API-en:
+  - `weather_from` variabel:
+    - Sjekke data i `instant` for å finne ut om brukeren trenger paraply hvis de skal dra nå, og om det er mulig å bruke paraply i strekningen.
+    - Regne `route_details` -> `legs` -> `mode:foot` -> `duration` for å finne ut hvor langt unna første stopp er.
+    - Hvis aktuelt, bruk `duration` dataen til å finne været i den aktuelle tidsserien framover. for å finne ut om det blir mye regn framover.
+  - `weather_to` variabel:
+    - Regne hele `duration` for alle etapper i `route_details` -> `legs` for å finne ut hvor lang tid hele turen tar.
+    - Bruke den utregnede tiden til å finne ut hvordan været er når brukeren ankommer destinasjonen
+- `route_details` variabel:
+  - Regne på `duration` av alle legs i `route_details` -> `legs` for å vise ventetid på ulike etapper i reisen.
+  - Koble bussens `expectedDepartureTime` med nåtiden for å vise en estimert progressbar som viser hvor lenge det er til bussen kommer.
+
+### Tanker
+
+- kan hende jeg må bruke location forecast 2.0 for å finne `instant` vær for `weather_to` siden den gir `instant` data timevis.
+
+### Utfordringer & Løsninger
+
+- Siden det er flere etapper og det kan regne på noen etapper må jeg sjekke om det er noen regn i alle etappene, da må jeg kalle vær api-en for hvert etappe.
+- Det kommer til å ta tid så jeg skal bare jobbe med veien til og fra første /siste stopp.
+- vanskeligere enn først antatt å legge til en progressbar
+- Kan ikke hente vær data fra location område så svaret programmet gir er ikke helt nøyaktig 
+---
