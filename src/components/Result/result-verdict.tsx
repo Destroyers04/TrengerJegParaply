@@ -59,9 +59,9 @@ export function ResultVerdict({ results }: { results: TripResults | null }) {
   };
 
   return (
-    <div className="flex flex-col items-center gap-8">
-      <div className="flex flex-row gap-8 text-xl font-bold items-center">
-        <div className="flex flex-col items-center w-30 text-nowrap">
+    <div className="flex flex-col items-center gap-8 my-12">
+      <div className="flex flex-row gap-8 md:text-xl text-xs font-bold items-center">
+        <div className="flex flex-col items-center w-10 md:w-30 text-nowrap">
           <p>{results.fromLabel}</p>
           <p>
             {new Date(
@@ -73,10 +73,10 @@ export function ResultVerdict({ results }: { results: TripResults | null }) {
             })}
           </p>
         </div>
-        <div className="flex flex-col items-center w-30">
+        <div className="flex flex-col items-center w-10 md:w-30">
           <p>{"\u2192"}</p>
         </div>
-        <div className="flex flex-col items-center w-30 text-nowrap">
+        <div className="flex flex-col items-center w-10 md:w-30 text-nowrap">
           <p>{results.toLabel}</p>
           <p>
             {new Date(
