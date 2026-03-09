@@ -1,12 +1,12 @@
 import { ResultVerdict } from "@/components/Result/result-verdict";
-import { ProgressBar } from "@/components/Result/progressbar";
+import { RouteTable } from "@/components/Result/route_table";
 import type { TripResults } from "@/components/TripForm/trip-form";
 
 export function ResultBody({ results }: { results: TripResults | null }) {
   return (
-    <div className="max-w-screen-xl mx-auto flex flex-col justify-center items-center h-screen pt-8 gap-12">
+    <div className=" flex flex-col justify-center items-center gap-12">
       <ResultVerdict results={results} />
-      <ProgressBar results={results} />
+      <RouteTable results={results} />
     </div>
   );
 }
