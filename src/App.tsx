@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { TripForm } from "@/components/TripForm/trip-form";
-import { ResultVerdict } from "@/components/Result/result-verdict";
-import { cn } from "@/lib/utils";
+import { ResultBody } from "@/components/Result/result-body";
 import type { TripResults } from "@/components/TripForm/trip-form";
 
 function App() {
@@ -20,7 +19,7 @@ function App() {
           setResults={setResults}
         />
       </div>
-      <div>{status && <ResultVerdict results={results} />}</div>
+      <div>{status && <ResultBody results={results} />}</div>
     </div>
   );
 }
