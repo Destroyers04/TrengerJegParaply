@@ -58,15 +58,27 @@ export function TripForm({ status, setStatus, setResults }: TripFormProps) {
       lon: toLocation.geometry.coordinates[0],
     };
     const currentTime: Date = new Date();
+    // Hvis den ikke finn en rute, sjekk gjennom de neste 24 timene
+    const find_route = async () => {
+      const max_attempts = 18; // 18 ganger maks
+      for (let i = 0; i < max_attempts; i++) {
+        const dateTime = new Date(
+          currentTime.getTime() + i * 1.5 * 60 * 60 * 1000, // 1.5 hour intervaller
+        ).toISOString();
+        const result = await get_route_details_data({
+          from: { coordinates: fromCords },
+          to: { coordinates: toCords },
+          dateTime,
+        });
+        if (result.data.trip.tripPatterns.length) return result;
+      }
+      throw new Error("Fant ingen ruter");
+    };
 
     const [weatherFrom, weatherTo, route_details] = await Promise.all([
       get_weather_measurements_data(fromCords),
       get_weather_measurements_data(toCords),
-      get_route_details_data({
-        from: { coordinates: fromCords },
-        to: { coordinates: toCords },
-        dateTime: currentTime.toISOString(),
-      }),
+      find_route(),
     ]);
     setResults({
       weatherFrom,
