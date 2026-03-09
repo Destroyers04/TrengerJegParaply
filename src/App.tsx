@@ -1,25 +1,26 @@
 import { useState } from "react";
 import { TripForm } from "@/components/TripForm/trip-form";
+import { ResultVerdict } from "@/components/Result/result-verdict";
 import { cn } from "@/lib/utils";
+import type { TripResults } from "@/components/TripForm/trip-form";
+
 function App() {
   const [status, setStatus] = useState<boolean>(false);
+  const [results, setResults] = useState<TripResults | null>(null);
+
   return (
     <div className="relative min-h-screen">
       <div
         className="trip-card border-solid border-4 p-8 rounded-md"
         data-submitted={status}
       >
-        <TripForm status={status} setStatus={setStatus} />
+        <TripForm
+          status={status}
+          setStatus={setStatus}
+          setResults={setResults}
+        />
       </div>
-      <div
-        className={cn(
-          status
-            ? "max-w-screen-xl flex justify-center items-center h-screen pt-8"
-            : "hidden",
-        )}
-      >
-        hidden object
-      </div>
+      <div>{status && <ResultVerdict results={results} />}</div>
     </div>
   );
 }
