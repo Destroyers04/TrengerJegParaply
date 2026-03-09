@@ -13,28 +13,38 @@ import {
   get_route_details_data,
   get_weather_measurements_data,
 } from "@/api/api";
-import type { GeocoderFeature, Coordinates } from "@/api/types";
+import type {
+  GeocoderFeature,
+  Coordinates,
+  WeatherData,
+  JourneyPlannerData,
+} from "@/api/types";
 
-interface locationProps {
+interface LocationProps {
   from: string;
   to: string;
 }
 
+export interface TripResults {
+  weatherFrom: WeatherData;
+  weatherTo: WeatherData;
+  route_details: JourneyPlannerData;
+}
 interface TripFormProps {
   status: boolean;
   setStatus: (value: boolean) => void;
+  setResults: (results: TripResults | null) => void;
 }
 
-export function TripForm({ status, setStatus }: TripFormProps) {
+export function TripForm({ status, setStatus, setResults }: TripFormProps) {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
 
   const [, formAction, isPending] = useActionState(submitInputData, null);
 
-  const handleClick = async ({ from, to }: locationProps) => {
+  const handleClick = async ({ from, to }: LocationProps) => {
     const fromLocation = JSON.parse(from) as GeocoderFeature;
     const toLocation = JSON.parse(to) as GeocoderFeature;
-
     const fromCords: Coordinates = {
       lat: fromLocation.geometry.coordinates[1],
       lon: fromLocation.geometry.coordinates[0],
@@ -55,7 +65,7 @@ export function TripForm({ status, setStatus }: TripFormProps) {
         dateTime: currentTime.toISOString(),
       }),
     ]);
-
+    setResults({ weatherFrom, weatherTo, route_details });
     setStatus(true);
   };
 
@@ -94,7 +104,11 @@ export function TripForm({ status, setStatus }: TripFormProps) {
 
         <Field orientation="vertical">
           <Button type="submit">
-            {isPending ? "Søker etter ruter" : "Sjekk nå"}
+            {isPending
+              ? "Søker etter ruter"
+              : status
+                ? "Søk igjen"
+                : "Sjekk nå"}
           </Button>
         </Field>
       </FieldGroup>
